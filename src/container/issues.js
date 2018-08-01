@@ -28,6 +28,7 @@ class Issues extends Component {
     // DataSnapshot
     this.database.on('child_added', snap => {
       previousIssues.push({
+        issueID: snap.val().key,
         issue: snap.val().issue,
         issueHeader: snap.val().issueHeader,
         issueDate: snap.val().issueDate,
@@ -39,7 +40,6 @@ class Issues extends Component {
         issues: previousIssues
       })
     })
-
   }
 
   render(){
@@ -48,6 +48,7 @@ class Issues extends Component {
         <div style={issueStyle} className="row">
         {
           this.state.issues.map((issue) => {
+            console.log( issue)
             return (
               <IssueType
               issueHeader={issue.issueHeader}

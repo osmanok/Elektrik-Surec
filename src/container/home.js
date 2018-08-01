@@ -13,15 +13,15 @@ class Home extends Component {
   constructor(){
     super();
     this.state = {
+      issueID: '',
       issueHeader: '',
       issue: '',
       issueMachineId: '',
       issueCreator: '',
       issueStatus: false,
       modalIsOpen: false,
+      modalDetailIsOpen: false,
     }
-    //this.dbApp = firebase.initializeApp(DB_CONFIG);
-    //this.dbRef = this.dbApp.database().ref('issues');
 
   }
 
@@ -49,9 +49,19 @@ class Home extends Component {
     this.setState({ modalIsOpen: false });
   }
 
+  openDetailModal = () => {
+    this.setState({ modalDetailIsOpen: true });
+  }
+
+  closeDetailModal = () => {
+    this.setState({ modalDetailIsOpen: false });
+  }
+
+
   save = () => {
     const dbRef = firebase.database().ref('issues');
     dbRef.push({
+      issueID: dbRef.push().key,
       issueHeader: this.state.issueHeader,
       issue: this.state.issue,
       issueMachineId: this.state.issueMachineId,
@@ -71,8 +81,7 @@ class Home extends Component {
         isOpen={this.state.modalIsOpen}
         onRequestClose={this.closeModal}
         contentLabel="Example Modal"
-        className="col-6 ml-auto mr-auto mt-5 border border-primary bg-light"
-      >
+        className="col-6 ml-auto mr-auto mt-5 border border-primary bg-light">
             <div className="modal-header">
               <h4>Ariza Giris Formu</h4>
             </div>
