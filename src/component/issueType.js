@@ -10,6 +10,7 @@ class IssueType extends Component{
         this.issueDate = props.issueDate;
         this.issueMachineId = props.issueMachineId;
         this.issueCreator = props.issueCreator;
+        this.issueID = props.issueID
     }
 
 

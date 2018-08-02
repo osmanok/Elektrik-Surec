@@ -60,8 +60,10 @@ class Home extends Component {
 
   save = () => {
     const dbRef = firebase.database().ref('issues');
-    dbRef.push({
-      issueID: dbRef.push().key,
+    const key = dbRef.push().key
+
+     dbRef.child(key).set({
+      issueID: key,
       issueHeader: this.state.issueHeader,
       issue: this.state.issue,
       issueMachineId: this.state.issueMachineId,

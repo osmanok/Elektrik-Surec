@@ -5,9 +5,6 @@ import {DB_CONFIG} from './config';
 import _ from 'lodash';
 import IssueType from '../component/issueType';
 
-//const dbApp = firebase.initializeApp(DB_CONFIG);
-//const dbRef = dbApp.database().ref("issues");
-
 const issueStyle = {
   marginTop: '100px',
 }
@@ -20,6 +17,7 @@ class Issues extends Component {
       issues: [],
     }
     this.database = firebase.database().ref().child('issues');
+
   }
 
   componentDidMount(){
@@ -28,7 +26,7 @@ class Issues extends Component {
     // DataSnapshot
     this.database.on('child_added', snap => {
       previousIssues.push({
-        issueID: snap.val().key,
+        issueID: snap.val().issueID,
         issue: snap.val().issue,
         issueHeader: snap.val().issueHeader,
         issueDate: snap.val().issueDate,
@@ -48,9 +46,10 @@ class Issues extends Component {
         <div style={issueStyle} className="row">
         {
           this.state.issues.map((issue) => {
-            console.log( issue)
+            console.log(issue.key)
             return (
               <IssueType
+              issueID={issue.issueID}
               issueHeader={issue.issueHeader}
               issue={issue.issue}
               issueDate={issue.issueDate}
