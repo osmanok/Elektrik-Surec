@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import { Link } from 'react-router-dom';
 import './issueType.css';
 
 class IssueType extends Component{
@@ -10,7 +11,6 @@ class IssueType extends Component{
         this.issueDate = props.issueDate;
         this.issueMachineId = props.issueMachineId;
         this.issueCreator = props.issueCreator;
-        this.issueID = props.issueID
     }
 
 

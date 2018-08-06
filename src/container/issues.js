@@ -1,9 +1,8 @@
 import React, { Component } from 'react';
 import firebase from 'firebase';
 import 'firebase/database';
-import {DB_CONFIG} from './config';
-import _ from 'lodash';
-import IssueType from '../component/issueType';
+import { Link } from 'react-router-dom';
+import { withRouter } from 'react-router';
 
 const issueStyle = {
   marginTop: '100px',
@@ -40,22 +39,36 @@ class Issues extends Component {
     })
   }
 
+
+
   render(){
     return(
       <div>
         <div style={issueStyle} className="row">
+        
         {
           this.state.issues.map((issue) => {
-            console.log(issue.key)
             return (
-              <IssueType
-              issueID={issue.issueID}
-              issueHeader={issue.issueHeader}
-              issue={issue.issue}
-              issueDate={issue.issueDate}
-              issueMachineId={issue.issueMachineId}
-              issueCreator={issue.issueCreator}
-              />
+              <div id="issue-list-container" className="container">
+                <div id="issue-list" className="col-9">
+                  <ul className="list-group">
+                    <li className="list-group-item">
+                      <div className="row">
+                        <Link
+                        to={`/issues/${issue.issueID}`}
+                        id="issue-list-item"
+                        issueID={issue.issueID}
+                        >
+                          deneme link 
+                        </Link>
+                        <div>
+                          {issue.issueHeader}
+                        </div>
+                      </div>
+                    </li>
+                  </ul>
+                </div>
+              </div>
             )
           })
         }
@@ -65,4 +78,4 @@ class Issues extends Component {
   }
 }
 
-export default Issues;
+export default withRouter(Issues);
