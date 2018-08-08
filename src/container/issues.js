@@ -41,6 +41,27 @@ class Issues extends Component {
     })
   }
 
+  statusBtn(issueID){
+    if(issueID){
+      return(
+        <div>
+          <button className="btn btn-success btn-lg">
+            Cozuldu
+          </button>
+        </div>
+      );
+    }
+    else{
+      return(
+        <div>
+          <button className="btn btn-danger btn-lg">
+            Cozulmedi
+          </button>
+        </div>
+      );
+    }
+  }
+
 
   render(){
     return(
@@ -61,7 +82,7 @@ class Issues extends Component {
                       >
                         <div className="row">
                           <div id="statusBtn" className="col-2">
-                            <button type="button" className="btn btn-danger ">Cozulmedi</button>
+                            {this.statusBtn(issues.issueStatus)}
                           </div>
                           <div className="col-6 text-dark">
                             <h2>{issues.issueHeader}</h2>
