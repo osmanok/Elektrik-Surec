@@ -16,11 +16,31 @@ class IssuesRouter extends Component {
       issueCreator: '',
       issueStatus: '',
       issueSolutionValue: '',
-      issueSolutionsValueAdder: '',
+      issueSolutionValueAdder: '',
+      issueSolutionDate: '',
       issueSolutions: [],
     }
 
   }
+
+  componentDidMount() {
+    console.log(this.state.issueID);
+    const previousIssuesSolutions = this.state.issueSolutions;
+    const database = firebase.database().ref().child('issues/'+this.state.issueID+'/issueSolutions');
+
+    database.on('child_added', snap => {
+      previousIssuesSolutions.push({
+        issueSolutionValue: snap.val().issueSolutionValue,
+        issueSolutionValueAdder: snap.val().issueSolutionValueAdder,
+        issueSolutionDate: snap.val().issueSolutionDate,
+      })
+
+      this.setState({
+        issueSolutions: previousIssuesSolutions
+      })
+    })
+  }
+  
 
   componentWillMount(){
     const item = this.props.history.location.state.issues
@@ -43,11 +63,11 @@ class IssuesRouter extends Component {
   }
 
   issueSolutionsValueAdderOnChange = (e) => {
-    this.setState({issueSolutionsValueAdder: e.target.value})
+    this.setState({issueSolutionValueAdder: e.target.value})
   }
 
   updateStatus = (key) => {
-    let dbRef = firebase.database().ref('issues'/key/'issueSolutions').child(key);
+    let dbRef = firebase.database().ref('issues').child(key);
     dbRef.update({
       issueStatus: this.state.issueStatus
     })
@@ -62,7 +82,8 @@ class IssuesRouter extends Component {
     let dbRef = firebase.database().ref('issues/'+key+'/issueSolutions');
     dbRef.push({
       issueSolutionValue: this.state.issueSolutionValue,
-      issueSolutionsValueAdder: this.state.issueSolutionsValueAdder,
+      issueSolutionValueAdder: this.state.issueSolutionValueAdder,
+      issueSolutionDate: new Date().toISOString(),
     })
   }
 
@@ -80,6 +101,7 @@ class IssuesRouter extends Component {
   }
 
   render(){
+    console.log(this.state.issueSolutions)
     return(
       <div>
         <div className="container">
@@ -110,6 +132,33 @@ class IssuesRouter extends Component {
               </div>
             </div>
           </div>
+          {/* map fonksyionu */}
+          {
+            this.state.issueSolutions.map((solutions) => {
+              console.log(solutions)
+              return (
+                <div className="row">
+                  <div className="col-3">
+                    {solutions.issueSolutionValueAdder}
+                  </div>
+                  <div className="card text-center col-9">
+                    <div className="card-header text-left">
+                      <strong>Ariza Cozum Aciklamasi</strong>
+                    </div>
+                    <div className="card-body">
+                      <h6 className="card-text">
+                        {solutions.issueSolutionValue}
+                      </h6>
+                    </div>
+                    <div className="card-footer text-muted text-right">
+                      {solutions.issueSolutionDate}
+                    </div>
+                  </div>
+                </div>
+              )
+            })
+          }
+          {/* map fonksyionu */}
           <div className="row">
             <div className="col-md-6"> 
               <input
