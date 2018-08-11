@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import firebase from 'firebase';
-import { Link } from 'react-router-dom';
+import Modal from 'react-modal';
 
 class IssuesRouter extends Component {
 
@@ -19,12 +19,13 @@ class IssuesRouter extends Component {
       issueSolutionValueAdder: '',
       issueSolutionDate: '',
       issueSolutions: [],
+      deleteModalIsOpen: false,
+      updateModalIsOpen: false,
     }
 
   }
 
   componentDidMount() {
-    console.log(this.state.issueID);
     const previousIssuesSolutions = this.state.issueSolutions;
     const database = firebase.database().ref().child('issues/'+this.state.issueID+'/issueSolutions');
 
@@ -66,7 +67,8 @@ class IssuesRouter extends Component {
     this.setState({issueSolutionValueAdder: e.target.value})
   }
 
-  updateStatus = (key) => {
+  updateStatusToTrue = (key) => {
+    this.setState({issueStatus: true});
     let dbRef = firebase.database().ref('issues').child(key);
     dbRef.update({
       issueStatus: this.state.issueStatus
@@ -74,7 +76,7 @@ class IssuesRouter extends Component {
   }
 
   delete = (key) => {
-    firebase.database() .ref('issues').child(key).remove();
+    firebase.database().ref('issues').child(key).remove();
     this.props.history.push('/');
   }
 
@@ -100,8 +102,23 @@ class IssuesRouter extends Component {
     }
   }
 
+  openDeleteModal = () => {
+    this.setState({ deleteModalIsOpen: true});
+  }
+
+  closeDeleteModal = () => {
+    this.setState({ deleteModalIsOpen: false});
+  }
+  
+  openUpdateModal = () => {
+    this.setState({ updateModalIsOpen: true});
+  }
+
+  closeUpdateModal = () => {
+    this.setState({ updateModalIsOpen: false});
+  }
+
   render(){
-    console.log(this.state.issueSolutions)
     return(
       <div>
         <div className="container">
@@ -115,7 +132,7 @@ class IssuesRouter extends Component {
           </div>
           <hr/>
           <div className="row">
-            <div className="col-3">
+            <div className="col-3 d-flex justify-content-center align-middle">
               {this.state.issueCreator}
             </div>
             <div className="card text-center col-9">
@@ -135,10 +152,9 @@ class IssuesRouter extends Component {
           {/* map fonksyionu */}
           {
             this.state.issueSolutions.map((solutions) => {
-              console.log(solutions)
               return (
                 <div className="row">
-                  <div className="col-3">
+                  <div className="col-3 d-flex justify-content-center align-middle">
                     {solutions.issueSolutionValueAdder}
                   </div>
                   <div className="card text-center col-9">
@@ -159,22 +175,74 @@ class IssuesRouter extends Component {
             })
           }
           {/* map fonksyionu */}
-          <div className="row">
-            <div className="col-md-6"> 
-              <input
-              onChange={this.issueSolutionsOnChange}
-              ref="issueSolutions"
-              className="form-control text"/>
+          <hr/>
+          <div> 
+            <div className="row">
+              <div className="col-md-3">
+                <select onChange={this.issueSolutionsValueAdderOnChange}>
+                  <option value="osman okuyan">osman okuyan</option>
+                  <option value="seref keser">seref keser</option>
+                </select>
+              </div>
+              <div className="col-md-6"> 
+                <input
+                onChange={this.issueSolutionsOnChange}
+                ref="issueSolutions"
+                className="form-control text"/>
+              </div>
+              <div className="col-md-3">
+                <button className="btn btn-secondary" onClick={() => {this.issueSolutionsComment(this.state.issueID)}}>Sorun Cozum Aciklmasi ekle</button>
+              </div>
             </div>
-            <div className="col-md-3">
-              <select onChange={this.issueSolutionsValueAdderOnChange}>
-                <option value="osman okuyan">osman okuyan</option>
-                <option value="seref keser">seref keser</option>
-              </select>
+          </div>
+          <br/>
+          <div className="row justify-content-end">
+            <div>
+              <button className="btn" onClick={this.openDeleteModal}>Arizayi Sil</button>
+              <Modal 
+                isOpen={this.state.deleteModalIsOpen}
+                onRequestClose={this.closeDeleteModal}
+                contentLabel="Delete Modal"
+                className="col-4 mt-5 mx-auto border border-danger bg-light"
+              >
+                  <div className="modal-header d-block">
+                    <h3 className="text-center text-danger">Emin misin?</h3>
+                  </div>
+                  <div className="modal-content">
+                    <div className="row">
+                      <button className="col-md-6 btn btn-danger" onClick={() => {this.delete(this.state.issueID)}}>
+                        <span className="text-white">Evet</span>
+                      </button>
+                      <button className="col-md-6 btn btn-primary" onClick={this.closeDeleteModal}>
+                        <span className="text-white">Hayir</span>
+                    </button>
+                    </div>
+                  </div>
+              </Modal>
             </div>              
             <div className="col-md-3">
-              <button className="btn" onClick={() => {this.issueSolutionsComment(this.state.issueID)}}>comment</button>
-            </div>
+              <button className="btn" onClick={this.openUpdateModal}>Cozuldu olarak isaretle</button>
+              <Modal 
+                isOpen={this.state.updateModalIsOpen}
+                onRequestClose={this.closeUpdateModal}
+                contentLabel="Update Modal"
+                className="col-4 mt-5 mx-auto border border-danger bg-light"
+              >
+                  <div className="modal-header d-block">
+                    <h3 className="text-center text-danger">Emin misin?</h3>
+                  </div>
+                  <div className="modal-content">
+                    <div className="row">
+                      <button className="col-md-6 btn btn-danger"onClick={() => {this.updateStatusToTrue(this.state.issueID)}}>
+                        <span className="text-white">Evet</span>
+                      </button>
+                      <button className="col-md-6 btn btn-primary" onClick={this.closeUpdateModal}>
+                        <span className="text-white">Hayir</span>
+                    </button>
+                    </div>
+                  </div>
+              </Modal>
+            </div> 
           </div>
         </div>
       </div>

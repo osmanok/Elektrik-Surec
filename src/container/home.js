@@ -74,7 +74,7 @@ class Home extends Component {
           isOpen={this.state.modalIsOpen}
           onRequestClose={this.closeModal}
           contentLabel="Example Modal"
-          className="col-6 ml-auto mr-auto mt-5 border border-primary bg-light">
+          className="col-6 mx-auto mt-5 border border-primary bg-light">
               <div className="modal-header">
                 <h4>Ariza Giris Formu</h4>
               </div>

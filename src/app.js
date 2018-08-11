@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import Navbar from './component/navbar';
 import Home from './container/home';
 import IssuesRouter from './container/issuesRouter';
+import SolvedIssues from './component/solvedissues';
 import firebase from 'firebase';
 import { HashRouter, Route,} from 'react-router-dom';
 
@@ -22,6 +23,7 @@ class App extends Component {
           <div>
             <Route exact path="/" component={Home} />
             <Route path="/issues/:id" component={IssuesRouter} />
+            <Route path="/solvedissues" component={SolvedIssues} />
           </div>
         </div>
       </HashRouter>
