@@ -67,8 +67,10 @@ class IssuesRouter extends Component {
     this.setState({issueSolutionValueAdder: e.target.value})
   }
 
-  updateStatusToTrue = (key) => {
-    this.setState({issueStatus: true});
+  updateStatusToTrue = (key, status) => {
+    if(!status){
+      this.statusChangeClick();
+    }
     let dbRef = firebase.database().ref('issues').child(key);
     dbRef.update({
       issueStatus: this.state.issueStatus
@@ -210,7 +212,7 @@ class IssuesRouter extends Component {
                   </div>
                   <div className="modal-content">
                     <div className="row">
-                      <button className="col-md-6 btn btn-danger" onClick={() => {this.delete(this.state.issueID)}}>
+                      <button className="col-md-6 btn btn-danger" onClick={() => {this.delete(this.state.issueID); this.closeDeleteModal();}}>
                         <span className="text-white">Evet</span>
                       </button>
                       <button className="col-md-6 btn btn-primary" onClick={this.closeDeleteModal}>
@@ -233,7 +235,7 @@ class IssuesRouter extends Component {
                   </div>
                   <div className="modal-content">
                     <div className="row">
-                      <button className="col-md-6 btn btn-danger"onClick={() => {this.updateStatusToTrue(this.state.issueID)}}>
+                      <button className="col-md-6 btn btn-danger"onClick={() => {this.updateStatusToTrue(this.state.issueID, this.state.issueStatus); this.closeUpdateModal();}}>
                         <span className="text-white">Evet</span>
                       </button>
                       <button className="col-md-6 btn btn-primary" onClick={this.closeUpdateModal}>
@@ -242,6 +244,7 @@ class IssuesRouter extends Component {
                     </div>
                   </div>
               </Modal>
+              {console.log(this.state.issueStatus)}
             </div> 
           </div>
         </div>

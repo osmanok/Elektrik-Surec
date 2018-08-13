@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import { Link } from 'react-router-dom';
+import SignOutButton from '../auth/SignOutButton';
 import './navbar.css';
 
 class Navbar extends Component {
@@ -19,6 +20,19 @@ class Navbar extends Component {
                 <Link className="nav-link text-black " to="/solvedissues">
                   <strong>Cozulenler</strong> 
                 </Link>
+              </li>
+              <li className="nav-item">
+                <Link className="nav-link text-black " to="/signin">
+                  <strong>sign-in</strong> 
+                </Link>
+              </li>
+              <li className="nav-item">
+                <Link className="nav-link text-black " to="/signup">
+                  <strong>sign-up</strong> 
+                </Link>
+              </li>
+              <li className="nav-item">
+                  <SignOutButton />
               </li>
             </ul>
           </div>

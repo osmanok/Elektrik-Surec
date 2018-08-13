@@ -1,27 +1,45 @@
 import React, { Component } from 'react';
+import { HashRouter, Route,} from 'react-router-dom';
+
+
 import Navbar from './component/navbar';
-import Home from './container/home';
+import Navigation from './component/Navigation';
+import HomePage from './container/HomePage';
 import IssuesRouter from './container/issuesRouter';
 import SolvedIssues from './component/solvedissues';
-import firebase from 'firebase';
-import { HashRouter, Route,} from 'react-router-dom';
+import SignUpPage from './auth/SignUpPage';
+import SignInPage from './auth/SignInPage';
+import { firebase } from './auth/firebase'
+import withAuthentication from './auth/withAuthentication';
+
 
 class App extends Component {
 
-  constructor(){
-    super();
+  constructor(props) {
+    super(props);
 
-    firebase.initializeApp({databaseURL: "https://react-firebase-8e39d.firebaseio.com"})
-    
+    this.state = {
+      authUser: null,
+    }
+  }
+
+  componentDidMount() {
+    firebase.auth.onAuthStateChanged(authUser => {
+      authUser
+        ? this.setState({ authUser })
+        : this.setState({ authUser: null });
+    });
   }
 
   render(){
     return(
       <HashRouter>
         <div>
-          <Navbar />
+          <Navigation authUser={this.state.authUser}/>
           <div>
-            <Route exact path="/" component={Home} />
+            <Route exact path="/" component={() => <HomePage/>} />
+            <Route path="/signup" component={() => <SignUpPage/>} />
+            <Route path="/signin" component={() => <SignInPage/>} />
             <Route path="/issues/:id" component={IssuesRouter} />
             <Route path="/solvedissues" component={SolvedIssues} />
           </div>
@@ -31,4 +49,4 @@ class App extends Component {
   }
 }
 
-export default App;
+export default withAuthentication(App);
