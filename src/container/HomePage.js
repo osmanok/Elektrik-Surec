@@ -1,12 +1,17 @@
-import React from 'react';
+import React, { Component } from 'react';
 
 import Home from './home';
 import withAuthorization from '../auth/withAuthorization';
 
-const HomePage = () =>
-  <div>
-    <Home/>
-  </div>
+class HomePage extends Component {
+  render() {
+    return (
+      <div>
+        <Home/>
+      </div>
+    );
+  }
+}
 
 const authCondition = (authUser) => !!authUser;
 

@@ -11,6 +11,7 @@ import SignUpPage from './auth/SignUpPage';
 import SignInPage from './auth/SignInPage';
 import { firebase } from './auth/firebase'
 import withAuthentication from './auth/withAuthentication';
+import Accounts from './auth/Accounts';
 
 
 class App extends Component {
@@ -40,6 +41,7 @@ class App extends Component {
             <Route exact path="/" component={() => <HomePage/>} />
             <Route path="/signup" component={() => <SignUpPage/>} />
             <Route path="/signin" component={() => <SignInPage/>} />
+            <Route path="/accounts" component={() => <Accounts/>} />
             <Route path="/issues/:id" component={IssuesRouter} />
             <Route path="/solvedissues" component={SolvedIssues} />
           </div>

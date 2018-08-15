@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import firebase from 'firebase';
 import Modal from 'react-modal';
+import { auth } from '../auth/firebase';
 
 class IssuesRouter extends Component {
 
@@ -19,6 +20,7 @@ class IssuesRouter extends Component {
       issueSolutionValueAdder: '',
       issueSolutionDate: '',
       issueSolutions: [],
+      issueSolver: '',
       deleteModalIsOpen: false,
       updateModalIsOpen: false,
     }
@@ -28,6 +30,8 @@ class IssuesRouter extends Component {
   componentDidMount() {
     const previousIssuesSolutions = this.state.issueSolutions;
     const database = firebase.database().ref().child('issues/'+this.state.issueID+'/issueSolutions');
+    const databaseSolver = firebase.database().ref().child('issues/'+this.state.issueID+'/issueSolver');
+
 
     database.on('child_added', snap => {
       previousIssuesSolutions.push({
@@ -35,6 +39,10 @@ class IssuesRouter extends Component {
         issueSolutionValueAdder: snap.val().issueSolutionValueAdder,
         issueSolutionDate: snap.val().issueSolutionDate,
       })
+
+    databaseSolver.on('value', (snapshot) => {
+      this.state.issueSolver=snapshot.val()
+    })
 
       this.setState({
         issueSolutions: previousIssuesSolutions
@@ -55,7 +63,9 @@ class IssuesRouter extends Component {
   }
   
   statusChangeClick = () => {
-    this.setState({issueStatus: true});
+    this.state.issueStatus
+      ? this.setState({ issueStatus: false })
+      : this.setState({ issueStatus: true })
   }
 
   issueSolutionsOnChange = (e) => {
@@ -63,17 +73,11 @@ class IssuesRouter extends Component {
     this.setState({issueSolutionValue: solutionAdderName});
   }
 
-  issueSolutionsValueAdderOnChange = (e) => {
-    this.setState({issueSolutionValueAdder: e.target.value})
-  }
-
-  updateStatusToTrue = (key, status) => {
-    if(!status){
-      this.statusChangeClick();
-    }
+  updateIssueStatus = (key) => {
     let dbRef = firebase.database().ref('issues').child(key);
     dbRef.update({
-      issueStatus: this.state.issueStatus
+      issueStatus: this.state.issueStatus,
+      issueSolver: firebase.auth().currentUser.email,
     })
   }
 
@@ -82,11 +86,12 @@ class IssuesRouter extends Component {
     this.props.history.push('/');
   }
 
+  //comment push func
   issueSolutionsComment = (key) => {
     let dbRef = firebase.database().ref('issues/'+key+'/issueSolutions');
     dbRef.push({
       issueSolutionValue: this.state.issueSolutionValue,
-      issueSolutionValueAdder: this.state.issueSolutionValueAdder,
+      issueSolutionValueAdder: firebase.auth().currentUser.email,
       issueSolutionDate: new Date().toISOString(),
     })
   }
@@ -103,6 +108,8 @@ class IssuesRouter extends Component {
       );
     }
   }
+
+
 
   openDeleteModal = () => {
     this.setState({ deleteModalIsOpen: true});
@@ -177,26 +184,21 @@ class IssuesRouter extends Component {
             })
           }
           {/* map fonksyionu */}
+          <div>
+            <h3>{this.state.issueSolver} Tarafindan sorun cozulmustur.</h3>            
+          </div>
           <hr/>
           <div> 
-            <div className="row">
-              <div className="col-md-3">
-                <select onChange={this.issueSolutionsValueAdderOnChange}>
-                  <option value="osman okuyan">osman okuyan</option>
-                  <option value="seref keser">seref keser</option>
-                </select>
-              </div>
               <div className="col-md-6"> 
-                <input
+                <textarea
                 onChange={this.issueSolutionsOnChange}
                 ref="issueSolutions"
                 className="form-control text"/>
               </div>
               <div className="col-md-3">
-                <button className="btn btn-secondary" onClick={() => {this.issueSolutionsComment(this.state.issueID)}}>Sorun Cozum Aciklmasi ekle</button>
+                <button disabled={ this.state.issueStatus} className="btn btn-secondary" onClick={() => {this.issueSolutionsComment(this.state.issueID)}}>Sorun Cozum Aciklmasi ekle</button>
               </div>
             </div>
-          </div>
           <br/>
           <div className="row justify-content-end">
             <div>
@@ -223,7 +225,7 @@ class IssuesRouter extends Component {
               </Modal>
             </div>              
             <div className="col-md-3">
-              <button className="btn" onClick={this.openUpdateModal}>Cozuldu olarak isaretle</button>
+              <button disabled={(this.state.issueStatus)} className="btn" onClick={() => {this.openUpdateModal(); this.statusChangeClick();}}>Cozuldu olarak isaretle</button>
               <Modal 
                 isOpen={this.state.updateModalIsOpen}
                 onRequestClose={this.closeUpdateModal}
@@ -235,16 +237,15 @@ class IssuesRouter extends Component {
                   </div>
                   <div className="modal-content">
                     <div className="row">
-                      <button className="col-md-6 btn btn-danger"onClick={() => {this.updateStatusToTrue(this.state.issueID, this.state.issueStatus); this.closeUpdateModal();}}>
+                      <button className="col-md-6 btn btn-danger"onClick={() => {this.updateIssueStatus(this.state.issueID); this.closeUpdateModal();}}>
                         <span className="text-white">Evet</span>
                       </button>
-                      <button className="col-md-6 btn btn-primary" onClick={this.closeUpdateModal}>
+                      <button className="col-md-6 btn btn-primary" onClick={() => {this.statusChangeClick(); this.closeUpdateModal();}}>
                         <span className="text-white">Hayir</span>
                     </button>
                     </div>
                   </div>
               </Modal>
-              {console.log(this.state.issueStatus)}
             </div> 
           </div>
         </div>

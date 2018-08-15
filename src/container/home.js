@@ -34,10 +34,6 @@ class Home extends Component {
     this.setState({ issueMachineId: e.target.value });
   }
 
-  issueCreatorOnChange = (e) => {
-    this.setState({ issueCreator: e.target.value })
-  }
-
   openModal = () => {
     this.setState({ modalIsOpen: true });
   }
@@ -56,7 +52,7 @@ class Home extends Component {
       issueHeader: this.state.issueHeader,
       issue: this.state.issue,
       issueMachineId: this.state.issueMachineId,
-      issueCreator: this.state.issueCreator,
+      issueCreator: firebase.auth().currentUser.email,
       issueDate: new Date().toISOString(),
       issueStatus: false,
     })
@@ -69,7 +65,7 @@ class Home extends Component {
         
         <Issues />
         
-        <button onClick={this.openModal} type="button" class="btn btn-default btn-circle btn-xl"><i class="fas fa-plus"></i></button>
+        <button onClick={this.openModal} type="button" className="btn btn-default btn-circle btn-xl"><i className="fas fa-plus"></i></button>
         <Modal
           isOpen={this.state.modalIsOpen}
           onRequestClose={this.closeModal}
@@ -107,14 +103,6 @@ class Home extends Component {
                         ref="issueMachineId"
                         className="form-control text"
                         placeholder="makine no"
-                        />
-                    </div>
-                    <div className="form-group">
-                      <input
-                        onChange={this.issueCreatorOnChange}
-                        ref='issueCreator'
-                        className="form-control text"
-                        placeholder="Arizayi olusturan kisi"
                         />
                     </div>
                   </div>
