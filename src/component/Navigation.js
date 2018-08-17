@@ -16,30 +16,15 @@ const NavigationAuth = () =>
   <nav className="navbar navbar-expand-lg navbar-light bg-danger">
   <div className="container">
     <Link to="/">
-      <h6 className="navbar-brand">Surec Takip</h6>
+      <div className="navbar-brand"><strong>Süreç Takip</strong></div>
     </Link>
     <button className="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
       <span className="navbar-toggler-icon"></span>
     </button>
-    <div className="collapse navbar-collapse" id="navbarNav">
+      <div className="collapse navbar-collapse justify-content-end" id="navbarNav">
       <ul className="navbar-nav">
         <li className="nav-item">
-          <Link className="nav-link text-black " to="/solvedissues">
-            <strong>Cozulenler</strong> 
-          </Link>
-        </li>
-        <li className="nav-item">
-          <Link className="nav-link text-black " to="/signin">
-            <strong>sign-in</strong> 
-          </Link>
-        </li>
-        <li className="nav-item">
-          <Link className="nav-link text-black " to="/signup">
-            <strong>sign-up</strong> 
-          </Link>
-        </li>
-        <li className="nav-item">
-            <SignOutButton />
+              <SignOutButton/>
         </li>
       </ul>
     </div>

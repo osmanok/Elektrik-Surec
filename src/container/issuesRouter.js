@@ -21,6 +21,7 @@ class IssuesRouter extends Component {
       issueSolutionDate: '',
       issueSolutions: [],
       issueSolver: '',
+      issueSolverDate: '',
       deleteModalIsOpen: false,
       updateModalIsOpen: false,
     }
@@ -30,7 +31,6 @@ class IssuesRouter extends Component {
   componentDidMount() {
     const previousIssuesSolutions = this.state.issueSolutions;
     const database = firebase.database().ref().child('issues/'+this.state.issueID+'/issueSolutions');
-    const databaseSolver = firebase.database().ref().child('issues/'+this.state.issueID+'/issueSolver');
 
 
     database.on('child_added', snap => {
@@ -40,16 +40,24 @@ class IssuesRouter extends Component {
         issueSolutionDate: snap.val().issueSolutionDate,
       })
 
-    databaseSolver.on('value', (snapshot) => {
-      this.state.issueSolver=snapshot.val()
-    })
-
       this.setState({
         issueSolutions: previousIssuesSolutions
       })
     })
   }
   
+  componentWillUpdate(){
+    const databaseSolver = firebase.database().ref().child('issues/'+this.state.issueID+'/issueSolver');
+    const databaseSolverDate = firebase.database().ref().child('issues/'+this.state.issueID+'/issueSolverDate');
+
+    databaseSolver.on('value', (snapshot) => {
+      this.state.issueSolver=snapshot.val()
+    })
+
+    databaseSolverDate.on('value', (snapshot) => {
+      this.state.issueSolverDate=snapshot.val()
+    })
+  }
 
   componentWillMount(){
     const item = this.props.history.location.state.issues
@@ -78,6 +86,7 @@ class IssuesRouter extends Component {
     dbRef.update({
       issueStatus: this.state.issueStatus,
       issueSolver: firebase.auth().currentUser.email,
+      issueSolverDate: new Date().toISOString(),
     })
   }
 
@@ -109,7 +118,28 @@ class IssuesRouter extends Component {
     }
   }
 
-
+  solutionPannel(issueSolver){
+    if(issueSolver != ''){
+      return(
+        <div className="row">
+          <div className="col-3 d-flex justify-content-center align-middle"></div>
+          <div className="card text-center col-9">
+            <div className="card-header text-left">
+              <strong>Ariza Cozum</strong>
+            </div>
+            <div className="card-body">
+              <h6 className="card-text">
+                {this.state.issueSolver} tarafindan cozulmustur
+              </h6>
+            </div>
+            <div className="card-footer text-muted text-right">
+              {this.state.issueSolverDate}
+            </div>
+          </div>
+        </div>
+      )
+    }
+  }
 
   openDeleteModal = () => {
     this.setState({ deleteModalIsOpen: true});
@@ -149,9 +179,15 @@ class IssuesRouter extends Component {
                 <strong>Ariza Aciklamasi</strong>
               </div>
               <div className="card-body">
-                <h6 className="card-text">
-                  {this.state.issue}
-                </h6>
+                <div className="card-text">
+                  {console.log(this.state.issueMachineId)}
+                  {console.log(this.state.issueHeader)}
+                  <div>
+                    {this.state.issueMachineId} nolu makinenin 
+                    {this.state.issueHeader} arizasi var.
+                    {this.state.issue}
+                  </div>
+                </div>
               </div>
               <div className="card-footer text-muted text-right">
                 {this.state.issueDate}
@@ -185,7 +221,7 @@ class IssuesRouter extends Component {
           }
           {/* map fonksyionu */}
           <div>
-            <h3>{this.state.issueSolver} Tarafindan sorun cozulmustur.</h3>            
+            {this.solutionPannel(this.state.issueSolver)}           
           </div>
           <hr/>
           <div> 

@@ -1,8 +1,6 @@
 import React, { Component } from 'react';
 import { HashRouter, Route,} from 'react-router-dom';
 
-
-import Navbar from './component/navbar';
 import Navigation from './component/Navigation';
 import HomePage from './container/HomePage';
 import IssuesRouter from './container/issuesRouter';

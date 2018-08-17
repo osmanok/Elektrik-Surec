@@ -77,25 +77,6 @@ class Home extends Component {
               <div className="modal-body">
               <form>
                 <div className="row">
-                  <div className="col-8">
-                      <div className="form-group">
-                        <input
-                        onChange={this.issueHeaderOnChange}
-                        ref="issueHeader"
-                        className="form-control"
-                        placeholder="Ariza Basligi"
-                        />
-                      </div>
-                      <div className="form-group">
-                        <textarea
-                          className="form-control"
-                          rows="15"
-                          placeholder="Ariza Aciklmasi"
-                          onChange={this.issueOnChange}
-                          ref="issue"
-                        />
-                      </div>
-                  </div>
                   <div className="col-4">
                     <div className="form-group">
                       <input
@@ -105,6 +86,16 @@ class Home extends Component {
                         placeholder="makine no"
                         />
                     </div>
+                  </div>                
+                  <div className="col-8">
+                      <div className="form-group">
+                        <textarea
+                        onChange={this.issueHeaderOnChange}
+                        ref="issueHeader"
+                        className="form-control"
+                        placeholder="Arıza Açıklaması"
+                        />
+                      </div>
                   </div>
                 </div>
               </form>
