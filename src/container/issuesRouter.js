@@ -129,7 +129,7 @@ class IssuesRouter extends Component {
             </div>
             <div className="card-body">
               <h6 className="card-text">
-                {this.state.issueSolver} tarafindan cozulmustur
+                {this.state.issueSolver} tarafından çözülmüştür.
               </h6>
             </div>
             <div className="card-footer text-muted text-right">
