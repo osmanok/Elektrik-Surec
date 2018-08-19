@@ -180,12 +180,9 @@ class IssuesRouter extends Component {
               </div>
               <div className="card-body">
                 <div className="card-text">
-                  {console.log(this.state.issueMachineId)}
-                  {console.log(this.state.issueHeader)}
                   <div>
                     {this.state.issueMachineId} nolu makinenin 
-                    {this.state.issueHeader} arizasi var.
-                    {this.state.issue}
+                    {this.state.issueHeader} arizasi var 
                   </div>
                 </div>
               </div>

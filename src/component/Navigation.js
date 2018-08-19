@@ -24,7 +24,12 @@ const NavigationAuth = () =>
       <div className="collapse navbar-collapse justify-content-end" id="navbarNav">
       <ul className="navbar-nav">
         <li className="nav-item">
-              <SignOutButton/>
+          <Link className="nav-link mr-5 text-dark" to="/solvedissues">
+            <strong>Çözülenler</strong>
+          </Link>
+        </li>
+        <li className="nav-item">
+          <SignOutButton/>
         </li>
       </ul>
     </div>
