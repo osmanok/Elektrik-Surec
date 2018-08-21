@@ -5,6 +5,7 @@ import Navigation from './component/Navigation';
 import HomePage from './container/HomePage';
 import IssuesRouter from './container/issuesRouter';
 import SolvedIssues from './component/solvedissues';
+import WaitingIssues from './component/waitingissues';
 import SignUpPage from './auth/SignUpPage';
 import SignInPage from './auth/SignInPage';
 import { firebase } from './auth/firebase'
@@ -42,6 +43,7 @@ class App extends Component {
             <Route path="/accounts" component={() => <Accounts/>} />
             <Route path="/issues/:id" component={IssuesRouter} />
             <Route path="/solvedissues" component={SolvedIssues} />
+            <Route path="/waitingissues" component={WaitingIssues} />
           </div>
         </div>
       </HashRouter>

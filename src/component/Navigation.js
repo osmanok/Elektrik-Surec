@@ -29,6 +29,11 @@ const NavigationAuth = () =>
           </Link>
         </li>
         <li className="nav-item">
+          <Link className="nav-link mr-5 text-dark" to="/waitingissues">
+            <strong>Bekleyen Arizalar</strong>
+          </Link>
+        </li>
+        <li className="nav-item">
           <SignOutButton/>
         </li>
       </ul>

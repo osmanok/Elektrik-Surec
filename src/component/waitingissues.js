@@ -1,80 +1,51 @@
 import React, { Component } from 'react';
 import firebase from 'firebase';
-import 'firebase/database';
 import { Link } from 'react-router-dom';
-import { withRouter } from 'react-router';
-import './issues.css';
+import '../container/issues.css';
 
 const issueStyle = {
   marginTop: '100px',
 }
 
-class Issues extends Component {
-
+class WaitingIssues extends Component {
   constructor(props){
     super(props);
     this.state = {
-      openIssues: [],
+      issues: [],
     }
   }
 
   componentDidMount(){
-    const previousOpenIssues = this.state.openIssues;
-    
-    firebase.database().ref('issues/').orderByChild('issueStatus').equalTo(false).on('child_added', snap => {
-      let waitingStatus = snap.val().issueIsWaiting;
-      if(!waitingStatus){
-        previousOpenIssues.push({
-          issueID: snap.val().issueID,
-          issue: snap.val().issue,
-          issueHeader: snap.val().issueHeader,
-          issueDate: snap.val().issueDate,
-          issueMachineId: snap.val().issueMachineId,
-          issueCreator: snap.val().issueCreator,
-          issueStatus: snap.val().issueStatus,
-        })
-      }
+    const previousIssues = this.state.issues;
 
-      previousOpenIssues.reverse();
-
-      this.setState({
-        openIssues: previousOpenIssues
+    firebase.database().ref('issues/').orderByChild('issueIsWaiting').equalTo(true).on('child_added', snap => {
+      previousIssues.push({
+        issueID: snap.val().issueID,
+        issue: snap.val().issue,
+        issueHeader: snap.val().issueHeader,
+        issueDate: snap.val().issueDate,
+        issueMachineId: snap.val().issueMachineId,
+        issueCreator: snap.val().issueCreator,
+        issueStatus: snap.val().issueStatus,
       })
 
+      previousIssues.reverse();
+
+      this.setState({
+        issues: previousIssues
+      })
     })
-
-  }
-  
-
-  statusBtn(issueID){
-    if(issueID){
-      return(
-        <div>
-          <button className="btn btn-success btn-lg">
-            Cozuldu
-          </button>
-        </div>
-      );
-    }
-    if(!issueID){
-      return(
-        <div>
-          <button className="btn btn-danger btn-lg">
-            Cozulmedi
-          </button>
-        </div>
-      );
-    }
   }
 
-
-  render(){
-    return(
+  render() {
+    return (
       <div>
+        <div className="container">
+          <h1 className="mx-auto">Kart Bekleyen Arizalar</h1>
+        </div>
         <div style={issueStyle} className="row">
-        
         {
-          this.state.openIssues.map((issues) => {
+          this.state.issues.map((issues) => {
             return (
               <div id="issue-list-container" className="container">
                 <div id="issue-list" className="col-9">
@@ -87,7 +58,9 @@ class Issues extends Component {
                       >
                         <div className="row">
                           <div id="statusBtn" className="col-2">
-                            {this.statusBtn(issues.issueStatus)}
+                            <button className="btn btn-primary">
+                              Bekliyor
+                            </button>
                           </div>
                           <div className="col-6 text-dark">
                             <h2>{issues.issueHeader}</h2>
@@ -110,8 +83,8 @@ class Issues extends Component {
         }
         </div>
       </div>
-    )
+    );
   }
 }
 
-export default withRouter(Issues);
+export default WaitingIssues;

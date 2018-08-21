@@ -1,7 +1,6 @@
 import React, { Component } from 'react';
 import firebase from 'firebase';
 import Modal from 'react-modal';
-import { auth } from '../auth/firebase';
 
 class IssuesRouter extends Component {
 
@@ -17,7 +16,6 @@ class IssuesRouter extends Component {
       issueCreator: '',
       issueStatus: '',
       issueIsWaiting: '',
-      issueWaitingCard: '',
       issueSolutionValue: '',
       issueSolutionValueAdder: '',
       issueSolutionDate: '',
@@ -91,10 +89,6 @@ class IssuesRouter extends Component {
     this.setState({issueSolutionValue: solutionAdderName});
   }
 
-  issueWaitingCardOnChange = (e) => {
-    let waitingCard = e.target.value
-    this.setState({issueWaitingCard: waitingCard});
-  }
 
   updateIssueStatus = (key) => {
     let dbRef = firebase.database().ref('issues').child(key);
@@ -109,13 +103,9 @@ class IssuesRouter extends Component {
     firebase.database().ref('issues').child(key).update({
       issueIsWaiting: this.state.issueIsWaiting,
     })
+    this.props.history.push('/');
   }
 
-  addWaitingCard = (key) => {
-    firebase.database().ref('issues/'+key).child('issueWaitingCards').push({
-      issueWaitingCard: this.state.issueWaitingCard,
-    })
-  }
 
   delete = (key) => {
     firebase.database().ref('issues').child(key).remove();
@@ -331,13 +321,6 @@ class IssuesRouter extends Component {
                     <h3 className="text-center text-danger">Kart bekleyenlere ekle</h3>
                   </div>
                   <div className="modal-content">
-                    <div className="input-group">
-                      <input type="text" onChange={this.issueWaitingCardOnChange} className="form-control" placeholder="beklenilecek kart adini giriniz?"/>
-                      {console.log(this.state.issueWaitingCard)}
-                      <button className="btn btn-primary" onClick={() => {this.addWaitingCard(this.state.issueID); this.cardAddBtnAlert();}}>
-                        Ekle
-                      </button>
-                    </div>
                     <div className="row">
                       <button className="col-md-6 btn btn-danger"onClick={() => {this.updateIssueWaiting(this.state.issueID); this.closeWaitModal();}}>
                         <span className="text-white">Evet</span>
