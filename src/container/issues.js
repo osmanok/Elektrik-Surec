@@ -24,15 +24,18 @@ class Issues extends Component {
 
     // DataSnapshot
     firebase.database().ref('issues/').orderByChild('issueStatus').equalTo(false).on('child_added', snap => {
-      previousOpenIssues.push({
-        issueID: snap.val().issueID,
-        issue: snap.val().issue,
-        issueHeader: snap.val().issueHeader,
-        issueDate: snap.val().issueDate,
-        issueMachineId: snap.val().issueMachineId,
-        issueCreator: snap.val().issueCreator,
-        issueStatus: snap.val().issueStatus,
-      })
+      let waitingStatus = snap.val().issueIsWaiting;
+      if(!waitingStatus){
+        previousOpenIssues.push({
+          issueID: snap.val().issueID,
+          issue: snap.val().issue,
+          issueHeader: snap.val().issueHeader,
+          issueDate: snap.val().issueDate,
+          issueMachineId: snap.val().issueMachineId,
+          issueCreator: snap.val().issueCreator,
+          issueStatus: snap.val().issueStatus,
+        })
+      }
 
       previousOpenIssues.reverse();
 
@@ -45,15 +48,18 @@ class Issues extends Component {
     const previousCloseIssues = this.state.closeIssues;
 
     firebase.database().ref('issues/').orderByChild('issueStatus').equalTo(true).on('child_added', snap => {
-      previousCloseIssues.push({
-        issueID: snap.val().issueID,
-        issue: snap.val().issue,
-        issueHeader: snap.val().issueHeader,
-        issueDate: snap.val().issueDate,
-        issueMachineId: snap.val().issueMachineId,
-        issueCreator: snap.val().issueCreator,
-        issueStatus: snap.val().issueStatus,
-      })
+      let waitingStatus = snap.val().issueIsWaiting;
+      if(!waitingStatus){
+        previousCloseIssues.push({
+          issueID: snap.val().issueID,
+          issue: snap.val().issue,
+          issueHeader: snap.val().issueHeader,
+          issueDate: snap.val().issueDate,
+          issueMachineId: snap.val().issueMachineId,
+          issueCreator: snap.val().issueCreator,
+          issueStatus: snap.val().issueStatus,
+        })
+      }
 
       previousCloseIssues.reverse();
 
@@ -76,7 +82,7 @@ class Issues extends Component {
         </div>
       );
     }
-    else{
+    if(!issueID){
       return(
         <div>
           <button className="btn btn-danger btn-lg">

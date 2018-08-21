@@ -5,7 +5,7 @@ import Modal from 'react-modal';
 import './AddModal.css';
 import Issues from './issues';
 
-
+//waiting cardi firebase pushlamaya calisiyordum.
 
 class Home extends Component {
   constructor(){
@@ -17,6 +17,7 @@ class Home extends Component {
       issueMachineId: '',
       issueCreator: '',
       issueStatus: false,
+      issueIsWaiting: false,
       modalIsOpen: false,
     }
 
@@ -55,6 +56,7 @@ class Home extends Component {
       issueCreator: firebase.auth().currentUser.email,
       issueDate: new Date().toISOString(),
       issueStatus: false,
+      issueIsWaiting: false,
     })
   }
 

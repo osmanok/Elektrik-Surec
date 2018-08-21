@@ -16,6 +16,8 @@ class IssuesRouter extends Component {
       issueMachineId: '',
       issueCreator: '',
       issueStatus: '',
+      issueIsWaiting: '',
+      issueWaitingCard: '',
       issueSolutionValue: '',
       issueSolutionValueAdder: '',
       issueSolutionDate: '',
@@ -24,6 +26,7 @@ class IssuesRouter extends Component {
       issueSolverDate: '',
       deleteModalIsOpen: false,
       updateModalIsOpen: false,
+      waitModalIsOpen: false,
     }
 
   }
@@ -68,6 +71,7 @@ class IssuesRouter extends Component {
     this.setState({issueMachineId: item.issueMachineId})
     this.setState({issueCreator: item.issueCreator})
     this.setState({issueStatus: item.issueStatus})
+    this.setState({issueIsWaiting: item.issueIsWaiting})
   }
   
   statusChangeClick = () => {
@@ -76,9 +80,20 @@ class IssuesRouter extends Component {
       : this.setState({ issueStatus: true })
   }
 
+  statusWaitingChangeClick = () => {
+    this.state.issueIsWaiting
+      ? this.setState({ issueIsWaiting: false })
+      : this.setState({ issueIsWaiting: true })
+  }
+
   issueSolutionsOnChange = (e) => {
     let solutionAdderName = e.target.value
     this.setState({issueSolutionValue: solutionAdderName});
+  }
+
+  issueWaitingCardOnChange = (e) => {
+    let waitingCard = e.target.value
+    this.setState({issueWaitingCard: waitingCard});
   }
 
   updateIssueStatus = (key) => {
@@ -87,6 +102,18 @@ class IssuesRouter extends Component {
       issueStatus: this.state.issueStatus,
       issueSolver: firebase.auth().currentUser.email,
       issueSolverDate: new Date().toISOString(),
+    })
+  }
+
+  updateIssueWaiting = (key) => {
+    firebase.database().ref('issues').child(key).update({
+      issueIsWaiting: this.state.issueIsWaiting,
+    })
+  }
+
+  addWaitingCard = (key) => {
+    firebase.database().ref('issues/'+key).child('issueWaitingCards').push({
+      issueWaitingCard: this.state.issueWaitingCard,
     })
   }
 
@@ -141,6 +168,10 @@ class IssuesRouter extends Component {
     }
   }
 
+  cardAddBtnAlert(){
+    alert('kart eklendi.')
+  }
+
   openDeleteModal = () => {
     this.setState({ deleteModalIsOpen: true});
   }
@@ -155,6 +186,14 @@ class IssuesRouter extends Component {
 
   closeUpdateModal = () => {
     this.setState({ updateModalIsOpen: false});
+  }
+
+  openWaitModal = () => {
+    this.setState({ waitModalIsOpen: true });
+  }
+
+  closeWaitModal = () => {
+    this.setState({ waitModalIsOpen: false });
   }
 
   render(){
@@ -280,6 +319,36 @@ class IssuesRouter extends Component {
                   </div>
               </Modal>
             </div> 
+            <div>
+              <button disabled={(this.state.issueStatus)} className="btn" onClick={() => {this.openWaitModal(); this.statusWaitingChangeClick();}}>Kart Bekliyor.</button>
+              <Modal
+                isOpen={this.state.waitModalIsOpen}
+                onRequestClose={this.closeWaitModal}
+                contentLabel="wait modal"
+                className="col-4 mt-5 mx-auto border border-danger bg-light"
+              >
+                <div className="modal-header d-block">
+                    <h3 className="text-center text-danger">Kart bekleyenlere ekle</h3>
+                  </div>
+                  <div className="modal-content">
+                    <div className="input-group">
+                      <input type="text" onChange={this.issueWaitingCardOnChange} className="form-control" placeholder="beklenilecek kart adini giriniz?"/>
+                      {console.log(this.state.issueWaitingCard)}
+                      <button className="btn btn-primary" onClick={() => {this.addWaitingCard(this.state.issueID); this.cardAddBtnAlert();}}>
+                        Ekle
+                      </button>
+                    </div>
+                    <div className="row">
+                      <button className="col-md-6 btn btn-danger"onClick={() => {this.updateIssueWaiting(this.state.issueID); this.closeWaitModal();}}>
+                        <span className="text-white">Evet</span>
+                      </button>
+                      <button className="col-md-6 btn btn-primary" onClick={() => {this.statusWaitingChangeClick(); this.closeWaitModal();}}>
+                        <span className="text-white">Hayir</span>
+                    </button>
+                    </div>
+                  </div> 
+              </Modal>
+            </div>
           </div>
         </div>
       </div>
