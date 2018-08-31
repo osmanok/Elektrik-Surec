@@ -47,6 +47,9 @@ class Home extends Component {
   save = () => {
     const dbRef = firebase.database().ref('issues');
     const key = dbRef.push().key
+    const date = new Date();
+    const datestring = date.getDate() + "-" + (date.getMonth()+1) + "-" + date.getFullYear() + " " + (date.getHours()) + "." + date.getMinutes();
+    console.log(datestring);
 
      dbRef.child(key).set({
       issueID: key,
@@ -54,7 +57,7 @@ class Home extends Component {
       issue: this.state.issue,
       issueMachineId: this.state.issueMachineId,
       issueCreator: firebase.auth().currentUser.email,
-      issueDate: new Date().toISOString(),
+      issueDate: datestring,
       issueStatus: false,
       issueIsWaiting: false,
     })
