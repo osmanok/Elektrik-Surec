@@ -19,15 +19,18 @@ class WaitingIssues extends Component {
     const previousIssues = this.state.issues;
 
     firebase.database().ref('issues/').orderByChild('issueIsWaiting').equalTo(true).on('child_added', snap => {
-      previousIssues.push({
-        issueID: snap.val().issueID,
-        issue: snap.val().issue,
-        issueHeader: snap.val().issueHeader,
-        issueDate: snap.val().issueDate,
-        issueMachineId: snap.val().issueMachineId,
-        issueCreator: snap.val().issueCreator,
-        issueStatus: snap.val().issueStatus,
-      })
+      let checkstatus=snap.val().issueStatus;
+      if(!checkstatus){
+        previousIssues.push({
+          issueID: snap.val().issueID,
+          issue: snap.val().issue,
+          issueHeader: snap.val().issueHeader,
+          issueDate: snap.val().issueDate,
+          issueMachineId: snap.val().issueMachineId,
+          issueCreator: snap.val().issueCreator,
+          issueStatus: snap.val().issueStatus,
+        })
+      }
 
       previousIssues.reverse();
 
