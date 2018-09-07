@@ -92,10 +92,13 @@ class IssuesRouter extends Component {
 
   updateIssueStatus = (key) => {
     let dbRef = firebase.database().ref('issues').child(key);
+    let date = new Date();
+    let datestring = date.getDate() + "-" + (date.getMonth()+1) + "-" + date.getFullYear() + " " + (date.getHours()) + "." + date.getMinutes();
+
     dbRef.update({
       issueStatus: this.state.issueStatus,
       issueSolver: firebase.auth().currentUser.email,
-      issueSolverDate: new Date().toISOString(),
+      issueSolverDate: datestring,
     })
   }
 
@@ -115,10 +118,13 @@ class IssuesRouter extends Component {
   //comment push func
   issueSolutionsComment = (key) => {
     let dbRef = firebase.database().ref('issues/'+key+'/issueSolutions');
+    let date = new Date();
+    let datestring = date.getDate() + "-" + (date.getMonth()+1) + "-" + date.getFullYear() + " " + (date.getHours()) + "." + date.getMinutes();
+
     dbRef.push({
       issueSolutionValue: this.state.issueSolutionValue,
       issueSolutionValueAdder: firebase.auth().currentUser.email,
-      issueSolutionDate: new Date().toISOString(),
+      issueSolutionDate: datestring,
     })
   }
 
@@ -136,7 +142,7 @@ class IssuesRouter extends Component {
   }
 
   solutionPannel(issueSolver){
-    if(issueSolver != ''){
+    if(issueSolver !== ''){
       return(
         <div className="row">
           <div className="col-3 d-flex justify-content-center align-middle"></div>
